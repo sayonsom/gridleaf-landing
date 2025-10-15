@@ -1,9 +1,18 @@
 "use client";
 import React from "react";
+import {
+  trackButtonClick,
+  trackLinkClick,
+  trackFormSubmit,
+  trackAPIKeyRequest,
+  trackMapOpen,
+  trackAIQuery,
+  trackPricingClick,
+} from "@/lib/analytics";
 
 // NOTE: Avoid Next.js-only or external UI deps to prevent sandbox errors.
 // We intentionally do NOT import `next/link` or `lucide-react` here.
-// If you want those back in a Next app, ping me and I’ll re-enable them.
+// If you want those back in a Next app, ping me and I'll re-enable them.
 
 const MAP_URL = "https://map.gridleaf.org"; // change if your map subdomain differs
 
@@ -154,14 +163,14 @@ export default function Page() {
             <span className="font-semibold tracking-tight">Gridleaf</span>
           </SafeLink>
           <nav className="hidden sm:flex items-center gap-6 text-sm text-white/80">
-            <SafeLink href={MAP_URL} className="hover:text-white flex items-center gap-1"><IconDot /> Map</SafeLink>
-            <SafeLink href="#api" className="hover:text-white">API</SafeLink>
-            <SafeLink href="#pricing" className="hover:text-white">Pricing</SafeLink>
-            <SafeLink href="#faq" className="hover:text-white">FAQ</SafeLink>
+            <SafeLink href={MAP_URL} className="hover:text-white flex items-center gap-1" trackingLabel="Nav - Map"><IconDot /> Map</SafeLink>
+            <SafeLink href="#api" className="hover:text-white" trackingLabel="Nav - API">API</SafeLink>
+            <SafeLink href="#pricing" className="hover:text-white" trackingLabel="Nav - Pricing">Pricing</SafeLink>
+            <SafeLink href="#faq" className="hover:text-white" trackingLabel="Nav - FAQ">FAQ</SafeLink>
           </nav>
           <div className="flex items-center gap-2">
-            <SafeLink href="#api" className="px-3 py-1.5 rounded-md border border-white/20 hover:border-white/40 text-sm">Get API Key</SafeLink>
-            <SafeLink href={MAP_URL} className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-white text-black text-sm font-semibold hover:bg-white/90">
+            <SafeLink href="#api" className="px-3 py-1.5 rounded-md border border-white/20 hover:border-white/40 text-sm" trackingLabel="Header - Get API Key">Get API Key</SafeLink>
+            <SafeLink href={MAP_URL} className="hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-white text-black text-sm font-semibold hover:bg-white/90" trackingLabel="Header - Open Map">
               Open Map <IconArrowRight />
             </SafeLink>
           </div>
@@ -198,10 +207,10 @@ export default function Page() {
               Access hourly electricity carbon intensity and energy mix data with AI-powered explanations. Build climate-aware applications with our developer-friendly API. Transparent pricing, generous free tier, no enterprise lock-in.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <SafeLink href={MAP_URL} className="inline-flex items-center gap-2 rounded-xl bg-[#ea580b] px-4 py-2.5 font-semibold hover:bg-[#ea580b]/90">
+              <SafeLink href={MAP_URL} className="inline-flex items-center gap-2 rounded-xl bg-[#ea580b] px-4 py-2.5 font-semibold hover:bg-[#ea580b]/90" trackingLabel="Hero - Explore Map">
                 Explore the Map <IconPin />
               </SafeLink>
-              <SafeLink href="#api" className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 hover:border-white/40">
+              <SafeLink href="#api" className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 hover:border-white/40" trackingLabel="Hero - Get API Key">
                 Get API Key <IconKey />
               </SafeLink>
               <span className="text-xs text-white/60">No credit card for free tier</span>
@@ -261,15 +270,19 @@ export default function Page() {
   "attribution": "Gridleaf.org"
 }`}</pre>
               <div className="mt-3 flex items-center gap-2">
-                <SafeLink href="#" className="text-sm underline underline-offset-4 decoration-white/30 hover:text-white">Open API docs</SafeLink>
+                <SafeLink href="#" className="text-sm underline underline-offset-4 decoration-white/30 hover:text-white" trackingLabel="API Section - Open API Docs">Open API docs</SafeLink>
                 <span className="text-white/30">•</span>
-                <SafeLink href="#" className="text-sm underline underline-offset-4 decoration-white/30 hover:text-white">SDKs</SafeLink>
+                <SafeLink href="#" className="text-sm underline underline-offset-4 decoration-white/30 hover:text-white" trackingLabel="API Section - SDKs">SDKs</SafeLink>
               </div>
             </div>
             <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#ea580b]/10 to-white/[0.05] p-6">
               <h3 className="font-semibold mb-2">Get Your Free API Key</h3>
               <p className="text-white/70 text-sm mb-4">Start with 10,000 free requests per month. Upgrade only when you scale. Transparent pricing, no hidden fees.</p>
-              <form className="grid gap-3" onSubmit={(e) => e.preventDefault()}>
+              <form className="grid gap-3" onSubmit={(e) => {
+                e.preventDefault();
+                trackAPIKeyRequest();
+                trackFormSubmit("API Key Request Form");
+              }}>
                 <input
                   placeholder="you@company.com"
                   type="email"
@@ -314,9 +327,9 @@ export default function Page() {
         <div className="max-w-6xl mx-auto px-4 py-10 text-sm text-white/60 flex flex-col md:flex-row items-center justify-between gap-4">
           <p>© {new Date().getFullYear()} Gridleaf.org</p>
           <div className="flex items-center gap-4">
-            <SafeLink href="#" className="hover:text-white/90">Terms</SafeLink>
-            <SafeLink href="#" className="hover:text-white/90">Privacy</SafeLink>
-            <SafeLink href="#" className="hover:text-white/90">Status</SafeLink>
+            <SafeLink href="#" className="hover:text-white/90" trackingLabel="Footer - Terms">Terms</SafeLink>
+            <SafeLink href="#" className="hover:text-white/90" trackingLabel="Footer - Privacy">Privacy</SafeLink>
+            <SafeLink href="#" className="hover:text-white/90" trackingLabel="Footer - Status">Status</SafeLink>
           </div>
         </div>
       </footer>
@@ -327,14 +340,21 @@ export default function Page() {
 
 // ------- Components (no external deps) ---------
 
-function SafeLink({ href, className, children }) {
+function SafeLink({ href, className, children, trackingLabel }) {
   const isExternal = /^https?:\/\//.test(href || "");
   const props = { href, className };
   if (isExternal) {
     props.target = "_blank";
     props.rel = "noopener noreferrer";
   }
-  return <a {...props}>{children}</a>;
+
+  const handleClick = () => {
+    if (trackingLabel) {
+      trackLinkClick(trackingLabel, href);
+    }
+  };
+
+  return <a {...props} onClick={handleClick}>{children}</a>;
 }
 
 function CommandBar() {
@@ -358,6 +378,8 @@ function CommandBar() {
           <button
             className="rounded-lg bg-white text-black text-sm font-semibold px-3 py-1.5 hover:bg-white/90"
             onClick={() => {
+              trackAIQuery(q || "Empty Query");
+              trackMapOpen("AI Query");
               const url = new URL(MAP_URL);
               if (q) url.searchParams.set("q", q);
               if (typeof window !== "undefined") window.location.href = url.toString();
@@ -398,7 +420,15 @@ function Price({ title, price, note, cta, featured }) {
       <div className="text-white/70 text-sm mb-1">{title}</div>
       <div className="text-3xl font-bold">{price}</div>
       <div className="text-white/60 text-sm mt-1">{note}</div>
-      <button className={`mt-4 w-full rounded-lg px-4 py-2 font-semibold ${featured ? "bg-[#ea580b] text-black hover:bg-[#ea580b]/90" : "bg-white text-black hover:bg-white/90"}`}>{cta}</button>
+      <button
+        onClick={() => {
+          trackPricingClick(title);
+          trackButtonClick(`Pricing - ${title} - ${cta}`);
+        }}
+        className={`mt-4 w-full rounded-lg px-4 py-2 font-semibold ${featured ? "bg-[#ea580b] text-black hover:bg-[#ea580b]/90" : "bg-white text-black hover:bg-white/90"}`}
+      >
+        {cta}
+      </button>
     </div>
   );
 }
